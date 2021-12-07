@@ -39,5 +39,20 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.LogWarningFormat($"PUN 由於 {cause} 而失去連線");
     }
-
+    public override void OnJoinedRoom()
+    {
+        Debug.Log("加入房間成功");
+    }
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.LogWarningFormat($"由於 {message} 而無法加入房間");
+    }
+    public void JoinGameRoom()
+    {
+        var option = new RoomOptions
+        {
+            MaxPlayers = 6
+        };
+        PhotonNetwork.JoinOrCreateRoom("Kingdom", option, null);
+    }
 }
