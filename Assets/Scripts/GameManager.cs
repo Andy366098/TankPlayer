@@ -23,8 +23,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        PhotonNetwork.ConnectUsingSettings();
-        PhotonNetwork.GameVersion = gameVersion;
+        PhotonNetwork.ConnectUsingSettings();   //讓Unity自動使用PUN設定的值
+        PhotonNetwork.GameVersion = gameVersion;    //控管遊戲版本
     }
    
     public override void OnConnected()
@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public override void OnDisconnected(DisconnectCause cause)
     {
-        Debug.LogWarningFormat($"PUN Disconnected was called by PUN with reason {cause}");
+        Debug.LogWarningFormat($"PUN 由於 {cause} 而失去連線");
     }
 
 }
