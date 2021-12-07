@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public static GameManager instance;
-    string gameVersion = "1";
+    public static GameManager instance; //Singleton單例
+    string gameVersion = "1";   //表示目前遊戲版本
     void Awake()
     {
         if (instance != null)   //如果有重複的就砍掉其中一個
