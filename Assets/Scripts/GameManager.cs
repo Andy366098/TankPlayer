@@ -1,12 +1,15 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager instance; //Singleton單例
+    public static GameObject localPlayer;   //用來獲取玩家資料
     string gameVersion = "1";   //表示目前遊戲版本
     void Awake()
     {
@@ -25,8 +28,19 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();   //讓Unity自動使用PUN設定的值
         PhotonNetwork.GameVersion = gameVersion;    //控管遊戲版本
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
-   
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (!PhotonNetwork.InRoom)
+        {
+            return;
+        }
+        localPlayer = PhotonNetwork.Instantiate("TankPlayer", new Vector3(0, 0, 0), Quaternion.identity, 0);
+        Debug.Log("玩家ID:" + localPlayer.GetInstanceID());
+    }
+
     public override void OnConnected()
     {
         Debug.Log("PUN已連接");
