@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             DestroyImmediate(gameObject);
             return;
         }
-        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.AutomaticallySyncScene = true;    //自動切換場景的機制
         DontDestroyOnLoad(gameObject);  //讓Unity在場景切換時不要將此物件刪除
         instance = this;
     }
@@ -41,7 +41,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
-        Debug.Log("加入房間成功");
+        if (PhotonNetwork.IsMasterClient)   //如果是第一個開啟的就當主要的Client
+        {
+            Debug.Log("創建房間成功");
+            PhotonNetwork.LoadLevel("GameScene");
+        }
+        else
+        {
+            Debug.Log("加入房間成功");
+        }
     }
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
