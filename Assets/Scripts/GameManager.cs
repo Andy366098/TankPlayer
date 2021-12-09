@@ -5,12 +5,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager instance; //Singleton單例
     public static GameObject localPlayer;   //用來獲取玩家資料
     string gameVersion = "1";   //表示目前遊戲版本
+    public InputField roomName;
     void Awake()
     {
         if (instance != null)   //如果有重複的就砍掉其中一個
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             return;
         }
+        //生成一個本地玩家物件在指定位置
         localPlayer = PhotonNetwork.Instantiate("TankPlayer", new Vector3(0, 0, 0), Quaternion.identity, 0);
         Debug.Log("玩家ID:" + localPlayer.GetInstanceID());
     }
@@ -69,12 +72,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Debug.LogWarningFormat($"由於 {message} 而無法加入房間");
     }
-    public void JoinGameRoom()
+    public void JoinGameRoom()  //創建房間時的設定
     {
         var option = new RoomOptions
         {
             MaxPlayers = 6
         };
-        PhotonNetwork.JoinOrCreateRoom("Kingdom", option, null);
+        //可藉由輸入房間名稱創建
+        PhotonNetwork.JoinOrCreateRoom(roomName.text, option, null);    
     }
 }
