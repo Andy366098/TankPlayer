@@ -81,4 +81,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         //可藉由輸入房間名稱創建
         PhotonNetwork.JoinOrCreateRoom(roomName.text, option, null);    
     }
+    //加入以下函式用來抓取所有重生點
+    public static List<GameObject> GetAllObjectsOfTypeInScene<T>()
+    {
+        var objectsInScene = new List<GameObject>();
+        foreach (var go in (GameObject [])Resources.FindObjectsOfTypeAll(typeof(GameObject)))
+        {
+            if (go.hideFlags == HideFlags.NotEditable || go.hideFlags == HideFlags.HideAndDontSave)
+            {
+                continue;
+            }
+            if (go.GetComponent<T>() != null)
+                objectsInScene.Add(go);
+        }
+        return objectsInScene;
+    }
 }
