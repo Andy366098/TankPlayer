@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using Photon.Pun;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Complete
 {
-    public class TankShooting : MonoBehaviour
+    //多繼承了MonoBehaviourPunCallbacks
+    public class TankShooting : MonoBehaviourPunCallbacks
     {
         public int m_PlayerNumber = 1;              // Used to identify the different players.
         public Rigidbody m_Shell;                   // Prefab of the shell.
@@ -22,9 +24,10 @@ namespace Complete
         private float m_ChargeSpeed;                // How fast the launch force increases, based on the max charge time.
         private bool m_Fired;                       // Whether or not the shell has been launched with this button press.
 
-
-        private void OnEnable()
+        //由於繼承MonoBehaviourPunCallbacks，因此這邊改成override且base
+        public override void OnEnable()
         {
+            base.OnEnable();
             // When the tank is turned on, reset the launch force and the UI
             m_CurrentLaunchForce = m_MinLaunchForce;
             m_AimSlider.value = m_MinLaunchForce;
@@ -86,18 +89,27 @@ namespace Complete
             // Set the fired flag so only Fire is only called once.
             m_Fired = true;
 
+            Rigidbody shellInstance = Instantiate(m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+            photonView.RPC("FireOther", RpcTarget.Others, m_FireTransform.position);
             // Create an instance of the shell and store a reference to it's rigidbody.
-            Rigidbody shellInstance =
-                Instantiate (m_Shell, m_FireTransform.position, m_FireTransform.rotation) as Rigidbody;
+
 
             // Set the shell's velocity to the launch force in the fire position's forward direction.
-            shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward; 
+            shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
 
             // Change the clip to the firing clip and play it.
             m_ShootingAudio.clip = m_FireClip;
             m_ShootingAudio.Play ();
 
             // Reset the launch force.  This is a precaution in case of missing button events.
+            m_CurrentLaunchForce = m_MinLaunchForce;
+        }
+        [PunRPC]
+        private void FireOther (Vector3 pos)
+        {
+            m_Fired = true;
+            Rigidbody shellInstance = Instantiate(m_Shell, pos, m_FireTransform.rotation);
+            shellInstance.velocity = m_CurrentLaunchForce * m_FireTransform.forward;
             m_CurrentLaunchForce = m_MinLaunchForce;
         }
     }

@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager instance; //Singleton單例
     public static GameObject localPlayer;   //用來獲取玩家資料
     string gameVersion = "1";   //表示目前遊戲版本
-    public InputField roomName;
+    public InputField roomName;     //房間名稱輸入框
+    private GameObject defaultSpawnPoint;
     void Awake()
     {
         if (instance != null)   //如果有重複的就砍掉其中一個
@@ -25,6 +26,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.AutomaticallySyncScene = true;    //自動切換場景的機制
         DontDestroyOnLoad(gameObject);  //讓Unity在場景切換時不要將此物件刪除
         instance = this;
+
+        defaultSpawnPoint = new GameObject("Default SpawnPoint");
+        defaultSpawnPoint.transform.position = new Vector3(0, 0, 0);
+        defaultSpawnPoint.transform.SetParent(transform, false);
     }
     private void Start()
     {
@@ -39,8 +44,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             return;
         }
-        //生成一個本地玩家物件在指定位置
-        localPlayer = PhotonNetwork.Instantiate("TankPlayer", new Vector3(0, 0, 0), Quaternion.identity, 0);
+
+        var spawnPoint = GetRandomSpawnPoint();
+        //生成一個本地玩家物件在設定的隨機重生點位置
+        localPlayer = PhotonNetwork.Instantiate("TankPlayer", spawnPoint.position, spawnPoint.rotation, 0);
         Debug.Log("玩家ID:" + localPlayer.GetInstanceID());
     }
 
@@ -95,5 +102,11 @@ public class GameManager : MonoBehaviourPunCallbacks
                 objectsInScene.Add(go);
         }
         return objectsInScene;
+    }
+    private Transform GetRandomSpawnPoint()
+    {
+        var spawnPoints = GetAllObjectsOfTypeInScene<SpawnPoint>();
+        return spawnPoints.Count == 0 ? 
+            defaultSpawnPoint.transform : spawnPoints[UnityEngine.Random.Range(0, spawnPoints.Count)].transform;
     }
 }
