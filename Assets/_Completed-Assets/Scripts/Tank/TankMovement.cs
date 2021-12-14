@@ -75,8 +75,10 @@ namespace Complete
             // Store the value of both input axes.
             m_MovementInputValue = Input.GetAxis (m_MovementAxisName);
             m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
-
+            
             EngineAudio ();
+            //增加了旋轉砲台的功能，尚未同步發射點到炮口
+            RotateTurret();
         }
 
 
@@ -136,6 +138,12 @@ namespace Complete
 
             // Apply this rotation to the rigidbody's rotation.
             m_Rigidbody.MoveRotation (m_Rigidbody.rotation * turnRotation);
+        }
+        private void RotateTurret()
+        {
+            float rotate = Input.GetAxis("RotateTurret");
+            GameObject turret = transform.FindAnyChild<Transform>("TankTurret").gameObject;
+            turret.transform.Rotate(0.0f, rotate, 0.0f);
         }
     }
 }
