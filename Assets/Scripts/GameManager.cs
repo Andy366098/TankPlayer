@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
     void UpdateCamera()
     {
-        float horizontal = Input.GetAxis("Horizontal");
+        float horizontal = Input.GetAxis("Horizontal") * 10.0f;
         
         if (localPlayer != null)
         {
