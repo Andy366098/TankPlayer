@@ -114,7 +114,10 @@ namespace Complete
             m_Fired = true;
             Rigidbody shellInstance = Instantiate(m_Shell, pos, rot);
             shellInstance.velocity = curForce * forward;
-            
+            //播放發射音效
+            m_ShootingAudio.clip = m_FireClip;
+            m_ShootingAudio.Play();
+
         }
     }
 }
