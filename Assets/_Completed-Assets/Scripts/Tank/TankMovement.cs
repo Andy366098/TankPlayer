@@ -77,7 +77,7 @@ namespace Complete
             m_TurnInputValue = Input.GetAxis (m_TurnAxisName);
             
             EngineAudio ();
-            //增加了旋轉砲台的功能，尚未同步發射點到炮口
+            //增加了旋轉砲台的功能
             RotateTurret();
         }
 

@@ -700,6 +700,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   roomName: {fileID: 732504317}
+  followDistance: 10
+  followHeight: 10
 --- !u!4 &802107493
 Transform:
   m_ObjectHideFlags: 0
