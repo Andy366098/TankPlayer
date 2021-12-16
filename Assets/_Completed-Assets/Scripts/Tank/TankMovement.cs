@@ -141,7 +141,7 @@ namespace Complete
         }
         private void RotateTurret()
         {
-            float rotate = Input.GetAxis("RotateTurret");
+            float rotate = Input.GetAxis("RotateTurret") * m_TurnSpeed * Time.deltaTime;
             GameObject turret = transform.FindAnyChild<Transform>("TankTurret").gameObject;
             turret.transform.Rotate(0.0f, rotate, 0.0f);
         }
